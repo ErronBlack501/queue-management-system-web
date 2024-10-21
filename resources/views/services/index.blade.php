@@ -4,9 +4,57 @@
             {{ __('Services') }}
         </h2>
     </x-slot>
-    <div>
-        <h2 class="text-center my-3 text-secondary text-xl uppercase">list of services</h2>
-        <div class="overflow-x-auto mx-8 rounded-lg border border-gray-200">
+    <div class="mx-8">
+        <h2 class="text-center mt-3 text-secondary text-xl uppercase">list of services</h2>
+
+        <div class="flex justify-end items-center mb-0">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-accent m-1">Columns
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                        <path fill-rule="evenodd"
+                            d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z"
+                            clip-rule="evenodd" />
+                    </svg>
+
+                </div>
+
+                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                    <li>
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                class="size-4">
+                                <path fill-rule="evenodd"
+                                    d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Column 1
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                class="size-4">
+                                <path fill-rule="evenodd"
+                                    d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Column 2
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <label class="input input-bordered flex items-center gap-2">
+                <input type="text" class="grow" placeholder="Search" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="h-4 w-4 opacity-70">
+                    <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </label>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+
             <table class="table bg-white">
                 <!-- head -->
                 <thead class="bg-white">
@@ -91,5 +139,6 @@
                 </tfoot>
             </table>
         </div>
+
     </div>
 </x-app-layout>
