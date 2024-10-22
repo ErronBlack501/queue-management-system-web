@@ -7,9 +7,9 @@
     <div class="mx-8">
         <h2 class="text-center mt-3 text-secondary text-xl uppercase">list of services</h2>
 
-        <div class="flex justify-end items-center mb-0">
+        <div class="flex justify-end items-center">
             <div class="dropdown">
-                <div tabindex="0" role="button" class="btn btn-accent m-1">Columns
+                <div tabindex="0" role="button" class="btn btn-accent btn-sm m-1">Columns
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
                         <path fill-rule="evenodd"
                             d="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z"
@@ -53,8 +53,7 @@
                 </svg>
             </label>
         </div>
-        <div class="overflow-x-auto rounded-lg border border-gray-200">
-
+        <div class="overflow-x-auto mt-1 bg-white rounded-lg border border-gray-200 shadow-lg">
             <table class="table bg-white">
                 <!-- head -->
                 <thead class="bg-white">
@@ -64,58 +63,101 @@
                                 <input type="checkbox" class="checkbox checkbox-primary" />
                             </label>
                         </th>
-                        <th>Name</th>
-                        <th>Job</th>
-                        <th>Favorite Color</th>
+                        <th>Id Service</th>
+                        <th>Service name</th>
+                        <th>Service description</th>
+                        <th>Estimated duration</th>
+                        <th>Is active ?</th>
+                        <th>Created at</th>
+                        <th>Updated at</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- row 1 -->
-                    <tr>
-                        <th>
-                            <label>
-                                <input type="checkbox" class="checkbox checkbox-primary" />
-                            </label>
-                        </th>
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <div class="avatar">
-                                    <div class="mask mask-squircle h-12 w-12">
-                                        <img src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                            alt="Avatar Tailwind CSS Component" />
+                    @foreach ($services as $service)
+                        <!-- row 1 -->
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-primary" />
+                                </label>
+                            </th>
+                            <td>
+                                <span>{{ $service->id }}</span>
+                            </td>
+                            <td>
+                                <span>{{ $service->service_name }}</span>
+                            </td>
+                            <td>
+                                <div class="whitespace-prewrap">{{ $service->service_description }}</div>
+                            </td>
+                            @if ($service->estimated_duration == null)
+                                <td class="text-center">?</td>
+                            @else
+                                <td>{{ $service->estimated_duration }}</td>
+                            @endif
+                            <td class="text-center">{{ $service->is_active }}</td>
+                            <td>{{ Carbon\Carbon::parse($service->created_at)->format('d M Y H:i:s') }}</td>
+                            <td>{{ Carbon\Carbon::parse($service->updated_at)->format('d M Y H:i:s') }}</td>
+                            <th>
+                                <div class="dropdown dropdown-end">
+                                    <div tabindex="0" role="button" class="btn btn-ghost btn-xs text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                        </svg>
                                     </div>
+
+                                    <ul tabindex="0"
+                                        class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                        <li>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                </svg>
+                                                Edit
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" class="size-6 fill-white stroke-gray-500">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+                                                View
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    stroke-width="1.5" stroke="currentColor"
+                                                    class="size-6 fill-red-500">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                                Delete
+                                            </span>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div>
-                                    <div class="font-bold text-gray-900">Hart Hagerty</div>
-                                    <div class="text-sm opacity-50">United States</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            Zemlak, Daniel and Leannon
-                            <br />
-                            <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
-                        </td>
-                        <td>Purple</td>
-                        <th>
-                            <button class="btn btn-ghost btn-xs text-primary">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                </svg>
-                            </button>
-                        </th>
-                    </tr>
-                    <!-- Other rows -->
+                            </th>
+                        </tr>
+                        <!-- Other rows -->
+                    @endforeach
                 </tbody>
                 <tfoot class="bg-white">
                     <tr>
-                        <th colspan="5">
+                        <th colspan="9">
                             <div class="flex justify-between items-center p-2">
                                 <div class="text-gray-700">0 of 5 row(s) selected.</div>
-                                <div class="flex items-center gap-4">
+                                <div class="flex justify-items-end items-center gap-4">
                                     <label for="rowsPerPage" class="text-gray-700">Rows per page:</label>
                                     <select id="rowsPerPage" class="select select-bordered w-20">
                                         <option>10</option>
