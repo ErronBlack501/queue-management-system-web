@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\PostServiceRequest;
 
 class ServiceController extends Controller
 {
@@ -22,39 +24,38 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        return view('services.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostServiceRequest $request)
     {
-        //
+        Service::create($request->validated());
+        return Redirect::route('services.index')->with('status', 'service-created');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Service $service)
-    {
-        //
-    }
+    public function show(Service $service) {}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Service $service)
     {
-        //
+        return view('services.edit', compact('service'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Service $service)
+    public function update(PostServiceRequest $request, Service $service)
     {
-        //
+        $service->update($request->validated());
+        return Redirect::route('services.index')->with('status', 'service-updated');
     }
 
     /**
@@ -62,6 +63,7 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        //
+        $service->delete();
+        return Redirect::route('services.index')->with('status', 'service-deleted');
     }
 }
