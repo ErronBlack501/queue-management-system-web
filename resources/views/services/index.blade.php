@@ -1,10 +1,13 @@
+@php
+    $serviceToDelete = null;
+@endphp
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-white leading-tight">
             {{ __('Services') }}
         </h2>
     </x-slot>
-    <div x-data="{ visibleModal: false }" class="static mx-8">
+    <div x-data="{ service: null }" class="static mx-8">
         <div class="flex justify-center">
             <button class="mt-2 btn btn-circle btn-accent">
                 <a href="{{ route('services.create') }}">
@@ -148,6 +151,7 @@
                                         </x-dropdown-link>
                                         <button
                                             class="'block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out' flex flex-row items-center gap-x-1"
+                                            @click="service = {{ Js::from($service) }}"
                                             onclick="view_modal.showModal()">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                 stroke-width="1.5" class="size-6 fill-white stroke-gray-500">
@@ -158,17 +162,23 @@
                                             </svg>
                                             <p>{{ __('View') }}</p>
                                         </button>
-                                        <x-dropdown-link :href="route('services.destroy', $service)">
-                                            <div class="flex flex-row items-center gap-x-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                    class="size-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                </svg>
-                                                <p>{{ __('Delete') }}</p>
-                                            </div>
-                                        </x-dropdown-link>
+
+                                        <form method="POST" action="{{ route('services.destroy', $service) }}">
+                                            @csrf
+                                            @method('delete')
+                                            <x-dropdown-link :href="route('services.destroy', $service)"
+                                                onclick="event.preventDefault(); this.closest('form').submit();">
+                                                <div class="flex flex-row items-center gap-x-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="size-6">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                    </svg>
+                                                    <p>{{ __('Delete') }}</p>
+                                                </div>
+                                            </x-dropdown-link>
+                                        </form>
                                     </x-slot>
                                 </x-dropdown>
                             </th>
@@ -234,10 +244,55 @@
         @endswitch
         <dialog id="view_modal" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
+                <div class="flex flex-col justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        class="size-6 stroke-sky-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                    </svg>
+                    <h3 class="text-lg font-bold">Service info</h3>
+
+                </div>
+
+                <div class="flex flex-row gap-1">
+                    <h1>Id service:</h1>
+                    <p x-text="service?.id"></p>
+                </div>
+                <div class="flex flex-row gap-1">
+                    <h1>Service name:</h1>
+                    <p x-text="service?.service_name"></p>
+                </div>
+                <div class="flex flex-col">
+                    <h1>Service description:</h1>
+                    <p x-text="service?.service_description"></p>
+                </div>
+                <div class="flex flex-row gap-1">
+                    <h1>Estimated duration:</h1>
+                    <p x-text="service?.estimated_duration ?? '?'"></p>
+                </div>
+                <div class="flex flex-row gap-1">
+                    <h1>Created at:</h1>
+                    <p x-text="service?.created_at"></p>
+                </div>
+                <div class="flex flex-row gap-1">
+                    <h1>Updated at:</h1>
+                    <p x-text="service?.updated_at"></p>
+                </div>
+                <div class="modal-action">
+                    <button class="btn" @click="service = null"
+                        onclick="document.getElementById('view_modal').close()">Close</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
                 <h3 class="text-lg font-bold">Hello!</h3>
                 <p class="py-4">Press ESC key or click the button below to close</p>
                 <div class="modal-action">
-                    <button class="btn" onclick="document.getElementById('view_modal').close()">Close</button>
+                    <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn">Close</button>
+                    </form>
                 </div>
             </div>
         </dialog>
