@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-white leading-tight">
-            {{ __('Services') }}
+            {{ __('Counters') }}
         </h2>
     </x-slot>
-    <div x-data="{ service: null }" class="static mx-8">
+    <div x-data="{ counter: null }" class="static mx-8">
         <div class="flex justify-center">
             <button class="mt-2 btn btn-circle btn-accent">
-                <a href="{{ route('services.create') }}">
+                <a href="{{ route('counters.create') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         class="size-6 stroke-white">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -15,7 +15,7 @@
             </button>
         </div>
 
-        <h2 class="text-center text-secondary text-xl uppercase">list of services</h2>
+        <h2 class="text-center text-secondary text-xl uppercase">list of counters</h2>
 
         <div class="flex justify-end items-center gap-x-1">
             <div class="dropdown">
@@ -73,18 +73,17 @@
                                 <input type="checkbox" class="checkbox checkbox-primary" />
                             </label>
                         </th>
-                        <th>Id Service</th>
+                        <th>Id counter</th>
+                        <th>Counter number</th>
+                        <th>Counter status</th>
                         <th>Service name</th>
-                        <th>Service description</th>
-                        <th>Estimated duration</th>
-                        <th>Is active ?</th>
                         <th>Created at</th>
                         <th>Updated at</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($services as $service)
+                <tbody class="text-center">
+                    @foreach ($counters as $counter)
                         <!-- row 1 -->
                         <tr>
                             <th>
@@ -92,39 +91,20 @@
                                     <input type="checkbox" class="checkbox checkbox-primary" />
                                 </label>
                             </th>
-                            <td class="text-center">
-                                <span>{{ $service->id }}</span>
+                            <td>
+                                <span>{{ $counter->id }}</span>
                             </td>
                             <td>
-                                <span>{{ $service->service_name }}</span>
+                                <span>{{ $counter->counter_number }}</span>
                             </td>
                             <td>
-                                <div class="whitespace-prewrap">{{ $service->service_description }}</div>
+                                <span>{{ $counter->counter_status }}</span>
                             </td>
-                            @if ($service->estimated_duration == null)
-                                <td class="text-center">?</td>
-                            @else
-                                <td>{{ $service->estimated_duration }}</td>
-                            @endif
-                            <td class="flex justify-center">
-                                @if ($service->is_active)
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" class="size-6 stroke-primary">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" class="size-6 stroke-red-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                @endif
+                            <td>
+                                <span>{{ $counter->service->service_name }}</span>
                             </td>
-                            <td class="text-center">
-                                {{ Carbon\Carbon::parse($service->created_at)->format('d M Y H:i:s') }}</td>
-                            <td class="text-center">
-                                {{ Carbon\Carbon::parse($service->updated_at)->format('d M Y H:i:s') }}</td>
+                            <td>{{ Carbon\Carbon::parse($counter->created_at)->format('d M Y H:i:s') }}</td>
+                            <td>{{ Carbon\Carbon::parse($counter->updated_at)->format('d M Y H:i:s') }}</td>
                             <th>
                                 <x-dropdown>
                                     <x-slot name="trigger">
@@ -137,7 +117,7 @@
                                         </button>
                                     </x-slot>
                                     <x-slot name="content">
-                                        <x-dropdown-link :href="route('services.edit', $service)">
+                                        <x-dropdown-link :href="route('counters.edit', $counter)">
                                             <div class="flex flex-row items-center gap-x-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -150,7 +130,7 @@
                                         </x-dropdown-link>
                                         <button
                                             class="'block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out' flex flex-row items-center gap-x-1"
-                                            @click="service = {{ Js::from($service) }}"
+                                            @click="counter = {{ Js::from($counter) }}"
                                             onclick="view_modal.showModal()">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                 stroke-width="1.5" class="size-6 fill-white stroke-gray-500">
@@ -162,10 +142,10 @@
                                             <p>{{ __('View') }}</p>
                                         </button>
 
-                                        <form method="POST" action="{{ route('services.destroy', $service) }}">
+                                        <form method="POST" action="{{ route('counters.destroy', $counter) }}">
                                             @csrf
                                             @method('delete')
-                                            <x-dropdown-link :href="route('services.destroy', $service)"
+                                            <x-dropdown-link :href="route('counters.destroy', $counter)"
                                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                                 <div class="flex flex-row items-center gap-x-1">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -215,7 +195,7 @@
             </table>
         </div>
         @switch(session('status'))
-            @case('service-created')
+            @case('counter-created')
                 <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)" role="alert"
                     class="absolute bottom-0 right-0 alert w-1/4 mb-2 bg-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-white" fill="none"
@@ -223,11 +203,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="font-semibold text-lg text-white">{{ __('Service created successfully.') }}</span>
+                    <span class="font-semibold text-lg text-white">{{ __('counter created successfully.') }}</span>
                 </div>
             @break
 
-            @case('service-updated')
+            @case('counter-updated')
                 <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 3000)" role="alert"
                     class="absolute bottom-0 right-0 alert w-1/4 mb-2 bg-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-white" fill="none"
@@ -235,7 +215,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="font-semibold text-lg text-white">{{ __('Service updated successfully.') }}</span>
+                    <span class="font-semibold text-lg text-white">{{ __('counter updated successfully.') }}</span>
                 </div>
             @break
 
@@ -249,49 +229,37 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                     </svg>
-                    <h3 class="text-lg font-bold">Service info</h3>
+                    <h3 class="text-lg font-bold">counter info</h3>
 
                 </div>
 
                 <div class="flex flex-row gap-1">
-                    <h1>Id service:</h1>
-                    <p x-text="service?.id"></p>
+                    <h1>Id counter:</h1>
+                    <p x-text="counter?.id"></p>
                 </div>
                 <div class="flex flex-row gap-1">
-                    <h1>Service name:</h1>
-                    <p x-text="service?.service_name"></p>
+                    <h1>counter name:</h1>
+                    <p x-text="counter?.counter_number"></p>
                 </div>
                 <div class="flex flex-col">
-                    <h1>Service description:</h1>
-                    <p x-text="service?.service_description"></p>
+                    <h1>counter description:</h1>
+                    <p x-text="counter?.counter_status"></p>
                 </div>
                 <div class="flex flex-row gap-1">
-                    <h1>Estimated duration:</h1>
-                    <p x-text="service?.estimated_duration ?? '?'"></p>
+                    <h1>service name:</h1>
+                    <p x-text="counter?.service?.service_name"></p>
                 </div>
                 <div class="flex flex-row gap-1">
                     <h1>Created at:</h1>
-                    <p x-text="service?.created_at"></p>
+                    <p x-text="counter?.created_at"></p>
                 </div>
                 <div class="flex flex-row gap-1">
                     <h1>Updated at:</h1>
-                    <p x-text="service?.updated_at"></p>
+                    <p x-text="counter?.updated_at"></p>
                 </div>
                 <div class="modal-action">
-                    <button class="btn" @click="service = null"
+                    <button class="btn" @click="counter = null"
                         onclick="document.getElementById('view_modal').close()">Close</button>
-                </div>
-            </div>
-        </dialog>
-        <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
-            <div class="modal-box">
-                <h3 class="text-lg font-bold">Hello!</h3>
-                <p class="py-4">Press ESC key or click the button below to close</p>
-                <div class="modal-action">
-                    <form method="dialog">
-                        <!-- if there is a button in form, it will close the modal -->
-                        <button class="btn">Close</button>
-                    </form>
                 </div>
             </div>
         </dialog>
